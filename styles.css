@@ -1,0 +1,96 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,800;1,300&display=swap");
+
+body {
+  background-color: #f8f8f8;
+  font-family: "Poppins", sans-serif;
+  max-width: 768px;
+  margin: 0 auto;
+  color: #1b1b1b;
+  font-size: 18px;
+}
+
+h1 {
+  font-size: 64px;
+  font-weight: 800;
+  margin-bottom: 0;
+}
+
+h2 {
+  font-size: 36px;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+#calendar {
+  background-color: #1b1b1b;
+  color: #fff;
+  width: 100%;
+  height: 500px;
+  border: 6px solid #1b1b1b;
+  border-radius: 8px;
+}
+
+.day {
+  display: inline-block;
+  width: 13.6%;
+  height: 100px;
+  border: 1px solid transparent;
+  text-align: center;
+}
+
+.day h3 {
+  font-weight: 300;
+  font-size: 26px;
+  margin: 0;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.selected {
+  border: 1px solid #00ff84;
+  border-radius: 6px;
+}
+
+#addMeeting {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  display: none;
+}
+
+input {
+  width: 100%;
+  min-height: 24px;
+  background-color: #1b1b1b;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 10px;
+  font-weight: bold;
+}
+input:focus {
+  background-color: white;
+  color: black;
+}
+
+input::placeholder {
+  color: white;
+}
+
+input[type="time"] {
+  cursor: pointer;
+}
+
+input[type="time"]::-webkit-calendar-picker-indicator {
+  background-color: #00ff84;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[value="Save Meeting"] {
+  background-color: #00ff84;
+  color: #1b1b1b;
+  cursor: pointer;
+  min-height: 44px;
+}
