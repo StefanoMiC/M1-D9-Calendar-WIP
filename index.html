@@ -5,24 +5,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" /> -->
-    <!-- <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,800;1,300&display=swap"
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;800&display=swap"
       rel="stylesheet"
-    /> -->
+    />
     <title>M1-D9-Calendar</title>
   </head>
   <body>
-    <h1>March</h1>
+    <h1></h1>
     <div id="calendar">
       <!-- day cells will be inserted here -->
-      <div class="day"><h3>1</h3></div>
-      <div class="day"><h3>1</h3></div>
-      <div class="day"><h3>1</h3></div>
-      <div class="day"><h3>1</h3></div>
-      <div class="day"><h3>1</h3></div>
-      <div class="day"><h3>1</h3></div>
-      <div class="day"><h3>1</h3></div>
     </div>
     <h2>Add Meeting</h2>
     <div id="addMeeting">
@@ -47,7 +39,16 @@
         <input type="button" value="Save Meeting" onclick="saveMeeting()" />
       </div>
     </div>
+    <br />
+    <div id="appointments">
+      <h2>appointments for the day:</h2>
+      <ul id="appointmentList">
+        <!-- this will receive appointments -->
+      </ul>
+    </div>
     <script>
+      let appointments = [];
+
       const months = [
         "January",
         "February",
@@ -63,8 +64,9 @@
         "December",
       ];
 
+      const now = new Date();
+
       const daysInThisMonth = function () {
-        const now = new Date();
         const thisYear = now.getFullYear();
         const thisMonth = now.getMonth();
         const daysInThisMonth = new Date(thisYear, thisMonth + 1, 0).getDate();
@@ -72,11 +74,106 @@
         return daysInThisMonth;
       };
 
+      const saveMeeting = function () {
+        const selected = document.querySelector(".selected");
+        if (selected) {
+          const meetingDay = document.getElementById("newMeetingDay").innerText;
+          let meetingTime = document.getElementById("newMeetingTime");
+          let meetingName = document.getElementById("newMeetingName");
+
+          if (meetingName.value && meetingTime.value) {
+            const calendar = document.getElementById("calendar");
+            let dayCell = calendar.children[parseInt(meetingDay) - 1];
+            dayCell.classList.add("withEvent");
+            dayCell.innerHTML += "<span></span>";
+
+            appointments[parseInt(meetingDay) - 1].push(
+              meetingTime.value + " - " + meetingName.value
+            );
+
+            meetingTime.value = "";
+            meetingName.value = "";
+
+            showAppointments(parseInt(meetingDay));
+
+            window.scrollTo(0, document.body.scrollHeight);
+          } else if (!meetingName.value && !meetingTime.value) {
+            alert("Pick a time and set the name of the meeting");
+          } else if (!meetingTime.value) {
+            alert("Pick a time before saving");
+          } else if (!meetingName.value) {
+            alert("Insert a meeting name");
+          }
+        } else {
+          alert("Select a day before saving");
+        }
+      };
+
+      const showAppointments = function (day) {
+        const todaysAppointments = appointments[day - 1];
+        document.getElementById("appointments").style.display = "block";
+
+        let appointmentList = document.querySelector(
+          "#appointments ul#appointmentList"
+        );
+        appointmentList.innerHTML = "";
+
+        for (let i = 0; i < todaysAppointments.length; i++) {
+          let li = document.createElement("li");
+          li.innerText = todaysAppointments[i];
+          appointmentList.appendChild(li);
+        }
+      };
+
       window.onload = function () {
         const numberOfDays = daysInThisMonth();
+        const calendar = document.getElementById("calendar");
+        const getMonth = months[now.getMonth()];
+        document.getElementsByTagName("h1")[0].innerText = getMonth;
 
-        for (let i = 0; i < months.length; i++) {
-          months[i];
+        const getDay = now.getDate();
+
+        for (let i = 0; i < numberOfDays; i++) {
+          appointments[i] = [];
+
+          // [
+          //   [], [], [], [], [], [], [],
+          //   [], [], [], [], [], [], [],
+          //   [], [], [], [], [], [], [],
+          //   [], [], [], [], ....
+          // ]
+
+          const child = document.createElement("div");
+          child.className = "day";
+
+          child.onclick = function (event) {
+            const selected = document.querySelector(".selected");
+            if (selected) {
+              selected.classList.remove("selected");
+            }
+            event.currentTarget.classList.add("selected");
+
+            document.getElementById("newMeetingDay").innerText = i + 1;
+            document.getElementById("newMeetingDay").style.cssText =
+              "font-size: 28px; background-color: #181818; border-radius: 3px; color: white; padding: 2px 6px;";
+
+            const todaysAppointments = appointments[i];
+            if (todaysAppointments.length > 0) {
+              showAppointments(i + 1);
+            } else {
+              document.getElementById("appointments").style.display = "none";
+            }
+          };
+
+          const dayNum = document.createElement("h3");
+          dayNum.innerText = i + 1;
+
+          if (i + 1 === getDay) {
+            dayNum.style.color = "#00ff84";
+          }
+
+          child.appendChild(dayNum);
+          calendar.appendChild(child);
         }
       };
     </script>
